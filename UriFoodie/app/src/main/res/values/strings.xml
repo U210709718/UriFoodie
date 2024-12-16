@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Urifoodie</string>
+    <string name="login">Login\n</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="click_to_register">Click to Register</string>
+    <string name="register">Register\n</string>
+    <string name="click_to_login">Click to login</string>
+</resources>
