@@ -8,6 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp"
+    android:background="@color/lightBlue"
     tools:context=".LoginActivity">
 
 
@@ -29,7 +30,8 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email">
+            android:hint="@string/email"
+            android:background="@android:color/white">
 
         </com.google.android.material.textfield.TextInputEditText>
 
@@ -43,7 +45,8 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password">
+            android:hint="@string/password"
+            android:background="@android:color/white">
 
         </com.google.android.material.textfield.TextInputEditText>
 
@@ -66,7 +69,8 @@
         android:textAllCaps="true"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:ignore="InvalidId" />
+        tools:ignore="InvalidId"
+        android:backgroundTint="@android:color/holo_blue_dark"/>
 
     <TextView
         android:id="@+id/registerNow"
@@ -76,6 +80,7 @@
         android:gravity="center"
         android:text="@string/click_to_register"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_blue_dark"/>
 
 </LinearLayout>
