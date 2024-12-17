@@ -8,4 +8,5 @@
     <color name="lightBlue">#ACD3F0</color>
     <color name="green">#4CAF50</color>
     <color name="primaryColor">#6200EE</color> <!-- Example: A purple color -->
+    <color name="purple_500">#9C27B0</color> <!-- Example Purple Color -->
 </resources>
