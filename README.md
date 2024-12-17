@@ -6,7 +6,7 @@
 
 ## 📌 **Project Overview**
 
-- **Team Members**: Hatice Kübra Selvi, Seham Hakim Ahmed Othman  
+- **Team Members**:  Seham Hakim Ahmed Othman ,Hatice Kübra Selvi
 - **Project Goal**: Create a platform where users can:  
   - Share their cooking experiences with text, photos, ingredients, and calorie details.  
   - Discover new recipes and connect with fellow food enthusiasts.  
