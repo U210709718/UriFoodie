@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <!-- Notification Icon -->
+    <ImageView
+        android:id="@+id/notificationIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_user_profile"
+        android:contentDescription="Notification Icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
+
+    <!-- Notification Title -->
+    <TextView
+        android:id="@+id/notificationTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/notificationIcon"
+        app:layout_constraintStart_toEndOf="@id/notificationIcon"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Notification Message -->
+    <TextView
+        android:id="@+id/notificationMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="sent you a message."
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/notificationTitle"
+        app:layout_constraintStart_toStartOf="@id/notificationTitle"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/lightGray"
+        app:layout_constraintTop_toBottomOf="@id/notificationMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

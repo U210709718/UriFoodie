@@ -9,6 +9,7 @@
     tools:context=".HomePageFragment">
 
     <!-- Top App Bar -->
+    <!-- Top App Bar -->
     <LinearLayout
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
@@ -20,6 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Menu Icon -->
         <ImageView
             android:id="@+id/menuIcon"
             android:layout_width="36dp"
@@ -31,6 +33,7 @@
             android:src="@drawable/ic_menu"
             app:tint="@color/black" />
 
+        <!-- Spacer to push icons to the right -->
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -49,7 +52,9 @@
             android:src="@drawable/baseline_notifications_none_24"
             app:tint="@color/black" />
 
+        <!-- Favorites Icon -->
         <ImageView
+            android:id="@+id/favoritesIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="16dp"
@@ -59,16 +64,18 @@
             android:src="@drawable/baseline_favorite_border_24"
             app:tint="@color/black" />
 
+        <!-- Messages Icon -->
         <ImageView
+            android:id="@+id/messagesIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="Open messages page "
+            android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true"
+            android:contentDescription="Open messages page"
             android:focusable="true"
             android:src="@drawable/baseline_message_24"
             app:tint="@color/black" />
     </LinearLayout>
+
 
     <!-- Post Input Section -->
     <LinearLayout

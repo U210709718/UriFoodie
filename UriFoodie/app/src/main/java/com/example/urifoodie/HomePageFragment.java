@@ -16,12 +16,9 @@ import androidx.fragment.app.Fragment;
  */
 public class HomePageFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -29,15 +26,6 @@ public class HomePageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomePageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomePageFragment newInstance(String param1, String param2) {
         HomePageFragment fragment = new HomePageFragment();
         Bundle args = new Bundle();
@@ -60,20 +48,32 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
-        // Find the notifications icon
+        // Find the icons
         ImageView notificationsIcon = view.findViewById(R.id.notificationsIcon);
+        ImageView favoritesIcon = view.findViewById(R.id.favoritesIcon);
+        ImageView messagesIcon = view.findViewById(R.id.messagesIcon);
+        ImageView menuIcon = view.findViewById(R.id.menuIcon);
 
-        // Set click listener to navigate to NotificationsFragment
-        notificationsIcon.setOnClickListener(v -> {
-            Fragment notificationsFragment = new NotificationsPageFragment();
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, notificationsFragment)
-                    .addToBackStack(null) // Allow going back to the Home Page
-                    .commit();
-        });
+        // Set click listener for Notifications Page
+        notificationsIcon.setOnClickListener(v -> openFragment(new NotificationsPageFragment()));
+
+        // Set click listener for Favorites Page
+        favoritesIcon.setOnClickListener(v -> openFragment(new FavoritePageFragment()));
+
+        // Set click listener for Messenger Page
+        messagesIcon.setOnClickListener(v -> openFragment(new MessengerPageFragment()));
+
+        // Set click listener for Triple Line Page (Menu)
+        menuIcon.setOnClickListener(v -> openFragment(new TripleLinePageFragment()));
 
         return view;
     }
 
-
+    // Helper method to open a new fragment
+    private void openFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null) // Allows navigation back to HomePage
+                .commit();
+    }
 }

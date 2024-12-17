@@ -25,11 +25,13 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/ic_menu"
+            android:contentDescription="Menu"
             app:tint="@color/black" />
 
+        <!-- Spacer using layout_weight -->
         <View
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <ImageView
@@ -37,6 +39,7 @@
             android:layout_height="35dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_bell"
+            android:contentDescription="Notifications"
             app:tint="@color/black" />
 
         <ImageView
@@ -44,12 +47,14 @@
             android:layout_height="35dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_heart"
+            android:contentDescription="Favorites"
             app:tint="@color/black" />
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/ic_chat"
+            android:contentDescription="Messages"
             app:tint="@color/black" />
     </LinearLayout>
 
@@ -62,5 +67,7 @@
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_notification" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
