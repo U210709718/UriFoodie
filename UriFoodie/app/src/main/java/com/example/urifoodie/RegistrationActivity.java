@@ -10,37 +10,42 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    TextInputEditText EditTextEmail, EditTextPassword;
+    TextInputEditText EditTextEmail, EditTextPassword, EditTextUsername;
     Button btnReg;
     TextView textView;
 
+
     FirebaseAuth mAuth;
     ProgressBar progressBar;
+    FirebaseFirestore firestore;
+    public static String  uname;
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is already log in! if so it will go to main activity
+        // Check if the user is already logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(RegistrationActivity.this , MainActivity.class);
+        if (currentUser != null) {
+            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -50,77 +55,87 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+
         progressBar = findViewById(R.id.progressBar);
-
-        EditTextEmail= findViewById(R.id.email);
-        EditTextPassword= findViewById(R.id.password);
+        EditTextEmail = findViewById(R.id.email);
+        EditTextPassword = findViewById(R.id.password);
+        EditTextUsername = findViewById(R.id.userName);
         textView = findViewById(R.id.loginNow);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Create intent to go to login activity
-                Intent intent = new Intent(RegistrationActivity.this , LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-        });
-
-
         btnReg = findViewById(R.id.btn_register);
-        btnReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                //read text from edit text!
-                String email,password;
-                email =  String.valueOf(EditTextEmail.getText());
-                password = String.valueOf(EditTextPassword.getText());
 
-                //both fields can't be empty!
-
-                if(TextUtils.isEmpty(email) ){
-                    Toast.makeText(RegistrationActivity.this , "Please fill email field" , Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(RegistrationActivity.this , "Please fill password field" , Toast.LENGTH_SHORT).show();
-                    return;
-
-                }
-
-                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if(task.isSuccessful()){
-                            // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(RegistrationActivity.this, "Account created Successfully. Please Login", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegistrationActivity.this , LoginActivity.class); //login
-                            startActivity(intent);
-                            finish();
-
-                        }else{
-                            // If sign in fails, display a message to the user.
-                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error occurred";
-                            Log.e("RegisterError", errorMessage);
-                            Toast.makeText(RegistrationActivity.this, "Authentication failed: " + errorMessage, Toast.LENGTH_LONG).show();
-
-                        }if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                            Toast.makeText(RegistrationActivity.this, "Invalid email format", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                    }
-                });
-
-
-
-            }
+        textView.setOnClickListener(v -> {
+            Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
+        btnReg.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+
+            String email = String.valueOf(EditTextEmail.getText()).trim();
+            String password = String.valueOf(EditTextPassword.getText()).trim();
+            String username = String.valueOf(EditTextUsername.getText()).trim();
 
 
+            // Validate input
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(RegistrationActivity.this, "Please fill email field", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(RegistrationActivity.this, "Please fill password field", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+            if (TextUtils.isEmpty(username)) {
+                Toast.makeText(RegistrationActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(RegistrationActivity.this, "Invalid email format", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
 
+            // Create a new user in Firebase Auth
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        saveUserNameToFirestore(user.getUid(), username);
+                    }
+
+                    Toast.makeText(RegistrationActivity.this, "Account created successfully. Please login.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error occurred";
+                    Log.e("RegisterError", errorMessage);
+                    Toast.makeText(RegistrationActivity.this, "Authentication failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                }
+            });
+
+        });
+    }
+
+    private void saveUserNameToFirestore(String userId, String username) {
+        DocumentReference docRef = firestore.collection("Users").document(userId);
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", username);
+
+        docRef.set(userData).addOnSuccessListener(unused -> {
+            Log.d("Firestore", "Username saved successfully");
+        }).addOnFailureListener(e -> {
+            Log.e("FirestoreError", "Error saving username: ", e);
+            Toast.makeText(RegistrationActivity.this, "Failed to save username to Firestore", Toast.LENGTH_SHORT).show();
+        });
+        uname =username;
     }
 }
