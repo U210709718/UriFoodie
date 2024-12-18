@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView txtView;
+    Button btnLogout;
     FirebaseAuth mAuth;
     FirebaseUser user;
 
@@ -33,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Firebase", "Firebase Initialized");
 
 
+        //Handling LOGIN and LOGOUT button
+        txtView = findViewById(R.id.user_details);
+        btnLogout = findViewById(R.id.logOut);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
@@ -40,7 +46,22 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this , LoginActivity.class);
             startActivity(intent);
             finish();
+        }else{
+            txtView.setText(user.getEmail());
         }
+
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                //it will sign out the user from firebase !
+                Intent intent = new Intent(MainActivity.this , LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         //___________________________________________________________________________________
 
         //INSIDE APPLICATION!!
