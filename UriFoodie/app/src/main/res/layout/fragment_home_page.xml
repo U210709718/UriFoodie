@@ -9,7 +9,6 @@
     tools:context=".HomePageFragment">
 
     <!-- Top App Bar -->
-    <!-- Top App Bar -->
     <LinearLayout
         android:id="@+id/topAppBar"
         android:layout_width="0dp"
@@ -69,13 +68,13 @@
             android:id="@+id/messagesIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:contentDescription="Open messages page"
             android:focusable="true"
             android:src="@drawable/baseline_message_24"
             app:tint="@color/black" />
     </LinearLayout>
-
 
     <!-- Post Input Section -->
     <LinearLayout
@@ -100,28 +99,40 @@
             android:padding="10dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="end">
+            android:gravity="center_vertical">
 
+            <!-- Camera Button on the leftmost -->
+            <ImageView
+                android:id="@+id/cameraButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_camera"
+                app:tint="@color/gray"
+                android:contentDescription="choose a picture or take a picture" />
+
+            <!-- Flexible spacer to push buttons to the right -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <!-- Submit Post Button -->
             <ImageView
                 android:id="@+id/submitPostButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:src="@drawable/baseline_check_box_24"
                 app:tint="@color/green"
                 android:contentDescription="Post" />
 
+            <!-- Cancel Post Button -->
             <ImageView
                 android:id="@+id/cancelPostButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:src="@drawable/baseline_cancel_presentation_24"
                 app:tint="@color/red"
                 android:contentDescription="Cancel"/>
@@ -138,5 +149,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
