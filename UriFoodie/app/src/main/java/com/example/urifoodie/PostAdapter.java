@@ -1,11 +1,15 @@
 package com.example.urifoodie;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,15 +31,34 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
         holder.usernameTextView.setText(post.getUsername());
         holder.postTextView.setText(post.getPostText());
-        Glide.with(holder.itemView.getContext())
-                .load(post.getUserProfilePicUrl())
-                .placeholder(R.drawable.ic_userpic_foreground) // make sure this drawable resource exists
-                .into(holder.userProfilePic);
+
+        // Load the user profile picture
+        if (post.getUserProfilePicUrl() != null && !post.getUserProfilePicUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(post.getUserProfilePicUrl())
+                    .into(holder.userProfilePic);
+        } else {
+            // Optionally set a default image or clear the old image
+            holder.userProfilePic.setImageResource(R.drawable.ic_userpic_foreground); // default or placeholder image
+        }
+
+        // Load the post image from Base64 string
+        if (post.getImageBase64() != null && !post.getImageBase64().isEmpty()) {
+            byte[] decodedString = Base64.decode(post.getImageBase64(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.imageView.setImageBitmap(decodedByte); // Make sure this ImageView is for the post image
+        } else {
+            // Optionally clear or set a default image if there's no post image
+            holder.imageView.setImageDrawable(null);
+        }
     }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -46,13 +69,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView usernameTextView;
         TextView postTextView;
         ImageView userProfilePic;
+        ImageView imageView;  // ImageView for the post image
 
         public PostViewHolder(View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             postTextView = itemView.findViewById(R.id.postTextView);
             userProfilePic = itemView.findViewById(R.id.userProfilePic);
+            imageView = itemView.findViewById(R.id.postImageView);  // Make sure this ID matches your layout
         }
     }
 }
-

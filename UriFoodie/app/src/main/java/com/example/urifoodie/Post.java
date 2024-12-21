@@ -7,22 +7,30 @@ public class Post {
     private String postText;
     private String imageUrl;
     private String userProfilePicUrl; // URL to user's profile picture
+    private String imageBase64; // Base64 string for the image
 
 
     // Default constructor for Firebase
     public Post() {}
 
     // Constructor
-    public Post(String userId, String username, String postText) {
+    /*public Post(String userId, String username, String postText) {
         this.userId = userId;
         this.username = username;
         this.postText = postText;
-    }
-    public Post(String userId, String username, String postText, String userProfilePicUrl) {
+    }*/
+//    public Post(String userId, String username, String postText, String userProfilePicUrl) {
+//        this.userId = userId;
+//        this.username = username;
+//        this.postText = postText;
+//        this.userProfilePicUrl = userProfilePicUrl;
+//    }
+
+    public Post(String userId, String username, String postText, String imageBase64) {
         this.userId = userId;
         this.username = username;
         this.postText = postText;
-        this.userProfilePicUrl = userProfilePicUrl;
+        this.imageBase64 = imageBase64;
     }
 
     // Getters
@@ -56,5 +64,10 @@ public class Post {
     public void setUserProfilePicUrl(String userProfilePicUrl) {
         this.userProfilePicUrl = userProfilePicUrl;
     }
+    public String getImageBase64() {
+        return imageBase64;
+    }
+    public void setImageBase64(String imageBase64 ) {
+        this.imageBase64 = imageBase64;
+    }
 }
-

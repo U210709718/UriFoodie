@@ -1,6 +1,13 @@
 package com.example.urifoodie;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,8 +29,11 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import android.Manifest;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,8 +50,11 @@ public class HomePageFragment extends Fragment {
 
     private EditText newPostInput;
     private ImageView submitPostButton, cancelPostButton;
+    private ImageView capturedImageView; // Reference to an ImageView where the captured image will be displayed
     RecyclerView recyclerView;
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_CAMERA_PERMISSION = 101; // Unique identifier for the camera permission request
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -92,6 +106,16 @@ public class HomePageFragment extends Fragment {
 
         // Listener for cancel button
         cancelPostButton.setOnClickListener(v -> clearPostInput());
+
+        ImageView cameraButton = view.findViewById(R.id.cameraButton);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
+        capturedImageView = view.findViewById(R.id.capturedImageView); // Ensure you have this ImageView in your layout
+
 
         return view;
     }
@@ -162,17 +186,33 @@ public class HomePageFragment extends Fragment {
     private void submitPost() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            if (user.getDisplayName() == null || user.getDisplayName().isEmpty()) {
-                checkAndUpdateUsername(user); // Ensure username is set
-            } else {
-                continuePostSubmission(user); // Continue with post submission
+            Log.d("SubmitPost", "Username: " + user.getDisplayName()); // Log to check username
+            String postText = newPostInput.getText().toString().trim();
+            if (postText.isEmpty()) {
+                Toast.makeText(getContext(), "Post text cannot be empty.", Toast.LENGTH_SHORT).show();
+                return;
             }
+            String imageBase64 = getCurrentEncodedImage();
+            createPost(user.getUid(), user.getDisplayName(), postText, imageBase64);
+            clearPostInput();
         } else {
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void continuePostSubmission(FirebaseUser user) {
+
+
+    private void createPost(String userId, String username, String postText, String imageBase64) {
+        Post newPost = new Post(userId, username, postText, imageBase64);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Users").document(userId).collection("Posts").add(newPost)
+                .addOnSuccessListener(documentReference -> Log.d("PostCreation", "Post added with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w("PostCreation", "Error adding post", e));
+    }
+
+
+
+    /*private void continuePostSubmission(FirebaseUser user) {
         String userId = user.getUid();
         String username = user.getDisplayName();
         String postText = newPostInput.getText().toString().trim();
@@ -182,17 +222,8 @@ public class HomePageFragment extends Fragment {
         }
         createPost(userId, username, postText);
         clearPostInput();
-    }
+    }*/
 
-
-
-    private void createPost(String userId, String username, String postText) {
-        Post newPost = new Post(userId, username, postText, null); // Assuming no image URL
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Users").document(userId).collection("Posts").add(newPost)
-                .addOnSuccessListener(documentReference -> Log.d("PostCreation", "Post added with ID: " + documentReference.getId()))
-                .addOnFailureListener(e -> Log.w("PostCreation", "Error adding post", e));
-    }
 
 
     private void clearPostInput() {
@@ -221,5 +252,70 @@ public class HomePageFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }
     }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } else {
+            Toast.makeText(getContext(), "No camera app available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            capturedImageView.setImageBitmap(imageBitmap);
+            // Log or toast message to confirm image capture
+            Log.d("Camera", "Image captured and set to view");
+        }
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(getContext(), "Camera permission is required to use the camera", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
+    private void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        // Now you can store this in your Post object
+        // For example: newPost.setImageBase64(encodedImage);
+    }
+    private String getCurrentEncodedImage() {
+        if (capturedImageView == null || capturedImageView.getDrawable() == null) {
+            return ""; // Return an empty string if there is no image set
+        }
+
+        // Get the bitmap from the ImageView
+        capturedImageView.setDrawingCacheEnabled(true);
+        capturedImageView.buildDrawingCache();
+        Bitmap bitmap = capturedImageView.getDrawingCache();
+
+        // Convert the Bitmap to a Base64 string
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
 
 }

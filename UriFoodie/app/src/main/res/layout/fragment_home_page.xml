@@ -98,6 +98,14 @@
             android:hint="New Post"
             android:padding="10dp" />
 
+        <ImageView
+            android:id="@+id/capturedImageView"
+            android:layout_width="399dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="Captured Image"
+            android:scaleType="centerCrop" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
