@@ -5,33 +5,69 @@ import com.google.firebase.Timestamp;
 
 public class Post {
     private String username;
-    private String text;
+    private String postText;
+    private String recipeText;
     private String imageUrl;
     private Timestamp timestamp;
+    private String userProfilePicUrl;
 
 
     public Post() {}
 
-    public Post(String username, String text, String imageUrl, Timestamp timestamp) {
+    public Post(String username, String postText, String recipeText, String imageUrl, Timestamp timestamp, String userProfilePicUrl) {
         this.username = username;
-        this.text = text;
+        this.postText = postText;
+        this.recipeText = recipeText;
         this.imageUrl = imageUrl;
         this.timestamp = timestamp;
+        this.userProfilePicUrl = userProfilePicUrl;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getText() {
-        return text;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPostText() {
+        return postText;
+    }
+
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
+    public String getRecipeText() {
+        return recipeText;
+    }
+
+    public void setRecipeText(String recipeText) {
+        this.recipeText = recipeText;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getUserProfilePicUrl() {
+        return userProfilePicUrl;
+    }
+
+    public void setUserProfilePicUrl(String userProfilePicUrl) {
+        this.userProfilePicUrl = userProfilePicUrl;
     }
 }

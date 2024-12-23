@@ -34,6 +34,16 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
         holder.usernameTextView.setText(post.getUsername());
         holder.postTextView.setText(post.getText());
 
+        // Load the user profile picture
+        if (post.getUserProfilePicUrl() != null && !post.getUserProfilePicUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(post.getUserProfilePicUrl())
+                    .into(holder.userProfilePic);
+        } else {
+            // Optionally set a default image or clear the old image
+            holder.userProfilePic.setImageResource(R.drawable.ic_userpic_foreground); // default or placeholder image
+        }
+
         String imageUrl = post.getImageUrl();
         Picasso.get()
                 .load(imageUrl)
@@ -49,12 +59,14 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
     public static class PostViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView;
         TextView postTextView;
+        ImageView userProfilePic;
         ImageView postImageView;
 
         public PostViewHolder(View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             postTextView = itemView.findViewById(R.id.postTextView);
+            userProfilePic = itemView.findViewById(R.id.userProfilePic);
             postImageView = itemView.findViewById(R.id.postImageView);
         }
     }
