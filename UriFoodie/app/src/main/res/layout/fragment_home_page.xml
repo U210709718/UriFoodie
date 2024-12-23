@@ -78,82 +78,43 @@
 
     <!-- Post Input Section -->
     <LinearLayout
-        android:id="@+id/newPostSection"
+        android:id="@+id/postInputSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
         android:background="@color/white"
-        android:padding="10dp"
-        android:elevation="2dp"
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
             android:id="@+id/newPostInput"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/lightGray"
-            android:gravity="top"
-            android:hint="New Post"
-            android:padding="10dp" />
-
-        <ImageView
-            android:id="@+id/capturedImageView"
-            android:layout_width="399dp"
-            android:layout_height="175dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="Captured Image"
-            android:scaleType="centerCrop" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:hint="What's on your mind?"
+            android:padding="8dp"
+            android:background="@android:color/white"
+            android:layout_marginEnd="8dp"
+            android:drawablePadding="4dp" />
 
-            <!-- Camera Button on the leftmost -->
-            <ImageView
-                android:id="@+id/cameraButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_camera"
-                app:tint="@color/gray"
-                android:contentDescription="choose a picture or take a picture" />
-
-            <!-- Flexible spacer to push buttons to the right -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <!-- Submit Post Button -->
-            <ImageView
-                android:id="@+id/submitPostButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_check_box_24"
-                app:tint="@color/green"
-                android:contentDescription="Post" />
-
-            <!-- Cancel Post Button -->
-            <ImageView
-                android:id="@+id/cancelPostButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_cancel_presentation_24"
-                app:tint="@color/red"
-                android:contentDescription="Cancel"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:backgroundTint="@color/blue"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
-    <!-- Posts Section -->
+    <!-- RecyclerView for Posts -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="10dp"
-        app:layout_constraintTop_toBottomOf="@id/newPostSection"
+        app:layout_constraintTop_toBottomOf="@id/postInputSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
