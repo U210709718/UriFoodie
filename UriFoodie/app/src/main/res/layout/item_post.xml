@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="4dp"
+    android:background="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     tools:context=".PostListRecyclerViewAdapter">
 
     <LinearLayout
@@ -15,31 +17,69 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Username Text -->
-        <TextView
-            android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-        <!-- Post Text -->
-        <TextView
-            android:id="@+id/postTextView"
+        <!-- Profile Section-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Post content goes here"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Post Image -->
-        <ImageView
-            android:id="@+id/postImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"/>
+            <!-- User Profile Picture ImageView -->
+
+            <!-- Username Text -->
+
+            <!-- Post Text -->
+
+            <!-- Post Image -->
+
+            <ImageView
+                android:id="@+id/userProfilePic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_userpic_background"
+                android:contentDescription="Profile Picture"
+                android:src="@drawable/ic_userpic_foreground" />
+
+            <TextView
+                android:id="@+id/usernameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:text="Username"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/postTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="You can share your meals and cooking experiences!"
+                android:textSize="14sp" />
+
+
+            <!-- Recipe Button -->
+            <ImageView
+                android:id="@+id/postImageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="0dp"
+                android:contentDescription="Post Image"
+                android:scaleType="centerCrop" />
+
+            <Button
+                    android:id="@+id/recipeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recipe"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/lightBlue"
+                    android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>
