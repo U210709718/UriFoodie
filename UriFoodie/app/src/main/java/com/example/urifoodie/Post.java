@@ -7,22 +7,31 @@ public class Post {
     private String username;
     private String postText;
     private String recipeText;
-    private String imageUrl;
+//    private String imageUrl;
     private Timestamp timestamp;
-    private String userProfilePicUrl;
+//    private String userProfilePicUrl;
 
 
     public Post() {}
 
-    public Post(String username, String postText, String recipeText, String imageUrl, Timestamp timestamp, String userProfilePicUrl) {
+    // New constructor for fewer parameters
+    public Post (String username, String postText, String recipeText, Timestamp timestamp) {
         this.username = username;
         this.postText = postText;
         this.recipeText = recipeText;
-        this.imageUrl = imageUrl;
-        this.timestamp = timestamp;
-        this.userProfilePicUrl = userProfilePicUrl;
+//        this.imageUrl = imageUrl;
+        this.timestamp = Timestamp.now(); // Automatically add a timestamp
     }
 
+    // Existing full constructor
+//    public Post(String username, String postText, String recipeText, String imageUrl, Timestamp timestamp, String userProfilePicUrl) {
+//        this.username = username;
+//        this.postText = postText;
+//        this.recipeText = recipeText;
+//        this.imageUrl = imageUrl;
+//        this.timestamp = timestamp;
+//        this.userProfilePicUrl = userProfilePicUrl;
+//    }
     public String getUsername() {
         return username;
     }
@@ -47,13 +56,13 @@ public class Post {
         this.recipeText = recipeText;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+//    public String getImageUrl() {
+//        return imageUrl;
+//    }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+//    public void setImageUrl(String imageUrl) {
+//        this.imageUrl = imageUrl;
+//    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -63,11 +72,11 @@ public class Post {
         this.timestamp = timestamp;
     }
 
-    public String getUserProfilePicUrl() {
-        return userProfilePicUrl;
-    }
-
-    public void setUserProfilePicUrl(String userProfilePicUrl) {
-        this.userProfilePicUrl = userProfilePicUrl;
-    }
+//    public String getUserProfilePicUrl() {
+//        return userProfilePicUrl;
+//    }
+//
+//    public void setUserProfilePicUrl(String userProfilePicUrl) {
+//        this.userProfilePicUrl = userProfilePicUrl;
+//    }
 }
