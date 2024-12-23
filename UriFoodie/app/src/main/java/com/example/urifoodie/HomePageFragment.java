@@ -65,11 +65,22 @@ public class HomePageFragment extends Fragment {
         // Set up adapter
         postAdapter = new PostListRecyclerViewAdapter(posts);
         postList.setAdapter(postAdapter);
-
         // Set up other UI components
         setupUI(view);
         // Set up listeners
         setupListeners();
+
+        submitPostButton = view.findViewById(R.id.btnPost);
+        submitPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PostActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
 
 
 
@@ -91,10 +102,6 @@ public class HomePageFragment extends Fragment {
      * Sets up click listeners for UI components.
      */
     private void setupListeners() {
-        submitPostButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), PostActivity.class);
-            startActivity(intent);
-        });
 
         notificationsIcon.setOnClickListener(v -> openFragment(new NotificationsPageFragment()));
         favoritesIcon.setOnClickListener(v -> openFragment(new FavoritePageFragment()));
