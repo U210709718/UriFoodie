@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     tools:context=".PostActivity">
 
@@ -14,11 +14,11 @@
         android:layout_height="wrap_content"
         android:background="@color/blue"
         android:elevation="4dp"
-        app:title="Create Post"
-        app:titleTextColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Create Post"
+        app:titleTextColor="@android:color/black" />
 
     <!-- Post Input Section -->
 
@@ -54,8 +54,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/captureImageButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.98"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recipie"
         app:layout_constraintTop_toBottomOf="@id/postTextInput"
         app:layout_constraintVertical_bias="0.287" />
 
@@ -93,6 +92,7 @@
         android:id="@+id/recipie"
         android:layout_width="212dp"
         android:layout_height="155dp"
+        android:layout_marginStart="16dp"
         android:background="@color/lightGray"
         android:ems="10"
         android:gravity="start|top"
@@ -100,9 +100,9 @@
         android:inputType="textMultiLine"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/captureImageButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postTextInput"
-        app:layout_constraintVertical_bias="0.333"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintVertical_bias="0.333" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
