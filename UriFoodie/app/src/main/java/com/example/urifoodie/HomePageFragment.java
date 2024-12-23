@@ -148,3 +148,146 @@ public class HomePageFragment extends Fragment {
 
 
 }
+
+/*  @Override      onCreateView  OLD
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
+        // Set up other UI components
+        setupUI(view);
+
+        // Find the UI elements
+        ImageView cameraButton = view.findViewById(R.id.cameraButton);
+        EditText urlInput = view.findViewById(R.id.urlInput);
+        ImageView submitPostButton = view.findViewById(R.id.submitPostButton);
+        EditText newPostInput = view.findViewById(R.id.newPostInput);
+
+        postList = view.findViewById(R.id.postList);
+        postList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Set up adapter
+        postAdapter = new PostListRecyclerViewAdapter(posts);
+        postList.setAdapter(postAdapter);
+
+        // Set the click listener for the camera button
+        cameraButton.setOnClickListener(v -> {
+            // Show the URL input field
+            urlInput.setVisibility(View.VISIBLE);
+        });
+
+        // Set the click listener for the submit button
+        submitPostButton.setOnClickListener(v -> {
+            String postText = newPostInput.getText().toString();
+            String imageUrl = urlInput.getText().toString(); // Get the URL from the input field
+
+            if (postText.isEmpty() || imageUrl.isEmpty()) {
+                Toast.makeText(getContext(), "Please enter a context!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            DocumentReference userRef = firestore.collection("Users").document(userId);
+
+            userRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("username");
+
+                            CollectionReference postsRef = userRef.collection("posts");
+
+                            Map<String, Object> post = new HashMap<>();
+                            post.put("username", username);
+                            post.put("text", postText);
+                            post.put("imageUrl", imageUrl);
+                            post.put("timestamp", FieldValue.serverTimestamp());
+
+                            postsRef.add(post)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Toast.makeText(getContext(), "The post successfully added!", Toast.LENGTH_SHORT).show();
+                                        fetchPostsFromFirestore();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.w("Post", "Error adding post", e);
+                                    });
+                        } else {
+                            Log.d("Firestore", "User document does not exist!");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w("Firestore", "Error getting user document", e);
+                    });
+        });
+
+        // Fetch posts from Firestore
+        fetchPostsFromFirestore();
+
+        return view;
+    }
+    */
+
+/*
+
+ OLD fetchPostsFromFirestore
+private void fetchPostsFromFirestore() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
+
+        CollectionReference postsRef = firestore.collection("Users").document(userId).collection("posts");
+
+        postsRef.orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    posts.clear();
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Post post = document.toObject(Post.class);
+                        posts.add(post);
+                    }
+
+                    postAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firestore", "Error getting documents", e);
+                });
+
+    }  */
+
+/*  /*private void loadPosts() {
+        firestore.collection("posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING) // Sort posts by timestamp
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    postList = new ArrayList<>();
+                    for (QuerySnapshot document : queryDocumentSnapshots) {
+                        postList.add(document.getData());
+                    }
+
+                    // Set up adapter with fetched data
+                    postAdapter = new PostRecyclerViewAdapter(getContext(), postList);
+                    postListRecyclerView.setAdapter(postAdapter);
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error loading posts: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }*/
+
+/*private void setupUI(View view) {
+    // Set click listeners for the icons
+    ImageView notificationsIcon = view.findViewById(R.id.notificationsIcon);
+    ImageView favoritesIcon = view.findViewById(R.id.favoritesIcon);
+    ImageView messagesIcon = view.findViewById(R.id.messagesIcon);
+    ImageView menuIcon = view.findViewById(R.id.menuIcon);
+
+    notificationsIcon.setOnClickListener(v -> openFragment(new NotificationsPageFragment()));
+    favoritesIcon.setOnClickListener(v -> openFragment(new FavoritePageFragment()));
+    messagesIcon.setOnClickListener(v -> openFragment(new MessengerPageFragment()));
+    menuIcon.setOnClickListener(v -> openFragment(new TripleLinePageFragment()));
+
+}
+
+// Helper method to open a new fragment
+private void openFragment(Fragment fragment) {
+    requireActivity().getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null) // Allows navigation back to HomePage
+            .commit();
+}  */
