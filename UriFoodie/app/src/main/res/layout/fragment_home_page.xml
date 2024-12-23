@@ -68,13 +68,13 @@
             android:id="@+id/messagesIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true"
             android:contentDescription="Open messages page"
             android:focusable="true"
             android:src="@drawable/baseline_message_24"
             app:tint="@color/black" />
     </LinearLayout>
+
 
     <!-- Post Input Section -->
     <LinearLayout
@@ -97,7 +97,7 @@
             android:padding="8dp"
             android:background="@android:color/white"
             android:layout_marginEnd="8dp"
-            android:drawablePadding="4dp" />
+            android:drawablePadding="4dp"/>
 
         <Button
             android:id="@+id/btnPost"
@@ -108,7 +108,7 @@
             android:textColor="@android:color/black" />
     </LinearLayout>
 
-    <!-- RecyclerView for Posts -->
+    <!-- RecyclerView  for Posts -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postList"
         android:layout_width="0dp"
@@ -118,4 +118,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
