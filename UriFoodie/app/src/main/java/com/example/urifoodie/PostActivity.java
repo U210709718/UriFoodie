@@ -38,12 +38,16 @@ import java.util.Locale;
 public class PostActivity extends AppCompatActivity {
 
     private EditText postTextInput, recipeTextInput;
-    private ImageView capturedImageView;
-    private Bitmap capturedImageBitmap; // To store the captured image
     private Button submitPostButton, captureImageButton;
+
 
     private Uri photoUri; // Store the URI of the photo
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private Bitmap capturedImageBitmap; // Store the captured photo
+    private ImageView capturedImageView; // To display the image
+
+
 
 
     @Override
@@ -60,8 +64,9 @@ public class PostActivity extends AppCompatActivity {
 
         // Initialize UI components
         postTextInput = findViewById(R.id.postTextInput);
-//        capturedImageView = findViewById(R.id.capturedImageView);
         recipeTextInput = findViewById(R.id.recipie);
+
+        capturedImageView = findViewById(R.id.capturedImageView); // Add this line
         submitPostButton = findViewById(R.id.submitPostButton);
         captureImageButton = findViewById(R.id.captureImageButton);
 
@@ -80,7 +85,7 @@ public class PostActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                photoFile = createImageFile(); // Create a temporary file for the image
             } catch (IOException ex) {
                 Log.e("PostActivity", "Error creating image file: ", ex);
                 Toast.makeText(this, "Error creating image file!", Toast.LENGTH_SHORT).show();
@@ -98,6 +103,8 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -109,6 +116,7 @@ public class PostActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
     }
+
 
 
 
@@ -129,13 +137,15 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Display the photo in the ImageView
+            // Display the photo in the ImageView using the Uri
             capturedImageView.setImageURI(photoUri);
         } else {
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     private void submitPost() {
