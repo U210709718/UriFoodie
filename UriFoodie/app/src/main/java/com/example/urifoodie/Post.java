@@ -7,9 +7,9 @@ public class Post {
     private String username;
     private String postText;
     private String recipeText;
-//    private String imageUrl;
+    private String imageUrl;
     private Timestamp timestamp;
-//    private String userProfilePicUrl;
+    private String userProfilePicUrl;
 
 
     public Post() {}

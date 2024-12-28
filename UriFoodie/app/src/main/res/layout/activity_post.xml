@@ -28,8 +28,8 @@
 
     <EditText
         android:id="@+id/postTextInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="392dp"
+        android:layout_height="92dp"
         android:layout_margin="16dp"
         android:layout_marginTop="40dp"
         android:background="@android:drawable/edit_text"
@@ -39,14 +39,16 @@
         android:inputType="textMultiLine"
         android:minLines="5"
         android:padding="16dp"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <ImageView
         android:id="@+id/capturedImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="232dp"
+        android:layout_height="165dp"
         android:layout_margin="16dp"
         android:layout_marginTop="32dp"
         android:contentDescription="Captured image preview"
@@ -56,18 +58,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/recipie"
         app:layout_constraintTop_toBottomOf="@id/postTextInput"
-        app:layout_constraintVertical_bias="0.287" />
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <Button
         android:id="@+id/captureImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="236dp"
-        android:background="#163759"
+        android:layout_marginTop="276dp"
+        android:background="@drawable/button_light_blue"
         android:padding="12dp"
         android:text="Capture Image"
+        style="@null"
         android:textColor="@android:color/white"
-        android:textColorLink="@color/blue"
+        android:textColorLink="#03A9F4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,32 +81,36 @@
         android:id="@+id/submitPostButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@color/blue"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_light_blue"
         android:padding="12dp"
         android:text="Submit Post"
+        style="@null"
         android:textColor="@android:color/white"
+        android:textColorLink="#03A9F4"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/captureImageButton" />
 
     <EditText
         android:id="@+id/recipie"
-        android:layout_width="212dp"
-        android:layout_height="155dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="142dp"
+        android:layout_height="176dp"
+        android:layout_marginStart="8dp"
         android:background="@color/lightGray"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Enter the recipe"
         android:inputType="textMultiLine"
-        android:textSize="20sp"
+        android:textColorHint="#000000"
+        android:textColorLink="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/captureImageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postTextInput"
-        app:layout_constraintVertical_bias="0.333" />
+        app:layout_constraintVertical_bias="0.083" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
