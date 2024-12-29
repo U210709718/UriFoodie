@@ -68,10 +68,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-<<<<<<< HEAD
-            android:backgroundTint="@color/blue"
-=======
->>>>>>> main
             android:text="Recipe"
             android:backgroundTint="@color/buttonColor"/>
 

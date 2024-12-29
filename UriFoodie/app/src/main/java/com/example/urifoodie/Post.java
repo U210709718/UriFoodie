@@ -75,11 +75,12 @@ public class Post {
         this.timestamp = timestamp;
     }
 
-    public String getUserProfilePicUrl() {
-        return userProfilePicUrl;
-    }
+//    public String getUserProfilePicUrl() {
+//        return userProfilePicUrl;
+//    }
 
-    public void setUserProfilePicUrl(String userProfilePicUrl) {
-        this.userProfilePicUrl = userProfilePicUrl;
-    }
+//    public void setUserProfilePicUrl(String userProfilePicUrl) {
+//        this.userProfilePicUrl = userProfilePicUrl;
+//    }
+
 }

@@ -37,8 +37,7 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
         return new PostViewHolder(view);
     }
 
-<<<<<<< HEAD
-=======
+
     //UPDATE METHOD HERE TO DISPLAY THE PICTURE TAKED BY THE CAMERA!!!!!!!
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
@@ -61,7 +60,7 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
 
         }
     }
->>>>>>> main
+
 
 // OLD CODE !! update onBindViewHolder to display the picture taken by the camera!
 //    @Override
@@ -78,6 +77,7 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
 //        holder.postTextView.setText(post.getPostText());
 //    }
 
+    /* OLD METHOD VERSION
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
@@ -113,7 +113,7 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
             // Add your recipe display logic here
         });
 
-    }
+    }*/
 
 
 
@@ -122,24 +122,14 @@ public class PostListRecyclerViewAdapter extends RecyclerView.Adapter<PostListRe
         TextView postTextView;
         ImageView postImageView; //added ! for displaying post image
         Button recipeButton;
-<<<<<<< HEAD
-        ImageView userProfilePic;
-        ImageView postImageView;  // ImageView for the post image
-=======
->>>>>>> main
 
         public PostViewHolder(View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             postTextView = itemView.findViewById(R.id.postTextView);
             recipeButton = itemView.findViewById(R.id.recipeButton);
-<<<<<<< HEAD
-            userProfilePic = itemView.findViewById(R.id.profileImageView);
-            postImageView = itemView.findViewById(R.id.postImageView);  // Make sure this ID matches your layout
-=======
             postImageView = itemView.findViewById(R.id.postImageView);
 
->>>>>>> main
         }
     }
 }
