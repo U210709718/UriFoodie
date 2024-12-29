@@ -19,7 +19,7 @@ public class ProfilePageFragment extends Fragment {
     private static final String ARG_USERNAME = "username";
     private String username;
 
-    TextView userNameTextView;
+    TextView userNameTextView , postsCountTextView;;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -54,13 +54,15 @@ public class ProfilePageFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        // Set the username on the profile page
+        // Initialize UI elements
         userNameTextView = view.findViewById(R.id.userName);
+        postsCountTextView = view.findViewById(R.id.postsCount);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null){
+        if (currentUser != null) {
             String userId = currentUser.getUid();
             getUsernameFromFirestore(userId);
+            getPostsCountFromFirestore(userId);
         }
         return view;
     }
@@ -78,6 +80,17 @@ public class ProfilePageFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("TAG", "Error retrieving username: " + e.getMessage());
+                });
+    }
+    public void getPostsCountFromFirestore(String userId) {
+        firestore.collection("Users").document(userId).collection("Posts")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int postsCount = queryDocumentSnapshots.size(); // Count the number of documents
+                    postsCountTextView.setText(String.valueOf(postsCount));
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("TAG", "Error retrieving posts count: " + e.getMessage());
                 });
     }
 
