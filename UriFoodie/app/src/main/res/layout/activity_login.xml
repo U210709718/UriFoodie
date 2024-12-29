@@ -11,7 +11,6 @@
     android:background="@color/lightBlue"
     tools:context=".LoginActivity">
 
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -24,53 +23,53 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+        android:textColorHint="@android:color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:background="@android:color/white">
-
-        </com.google.android.material.textfield.TextInputEditText>
+            android:background="@android:color/white"
+            android:textColor="@android:color/black"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/password"
+        android:textColorHint="@android:color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:background="@android:color/white">
-
-        </com.google.android.material.textfield.TextInputEditText>
+            android:background="@android:color/white"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </ProgressBar>
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/login"
         android:textAllCaps="true"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:ignore="InvalidId"
-        android:backgroundTint="@android:color/holo_blue_dark"/>
+        android:backgroundTint="@android:color/holo_blue_dark" />
 
     <TextView
         android:id="@+id/registerNow"
@@ -81,6 +80,6 @@
         android:text="@string/click_to_register"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/holo_blue_dark"/>
+        android:textColor="@android:color/holo_blue_dark" />
 
 </LinearLayout>

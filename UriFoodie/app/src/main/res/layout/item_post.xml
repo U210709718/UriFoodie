@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:background="@android:color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardElevation="4dp"
     app:cardCornerRadius="8dp">
 
@@ -38,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:text="Username"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <!-- Post Text -->
@@ -48,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Hey everyone, I just wanted to share my recipe!"
+            android:textColor="#000000"
             android:textSize="14sp" />
 
         <!-- Post Image -->
@@ -64,8 +68,93 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/blue"
             android:text="Recipe"
-            android:textColor="@android:color/white" />
+            android:backgroundTint="@color/buttonColor"/>
+
+        <!-- Action Buttons -->
+        <!-- Action Buttons -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="358dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="16dp">
+
+            <!-- Like Button -->
+            <LinearLayout
+                android:id="@+id/likeButtonLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </LinearLayout>
+
+            <!-- Favorite Button -->
+            <LinearLayout
+                android:id="@+id/favoriteButtonLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/favoritesIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="4dp"
+                android:contentDescription="Favorite Icon"
+                android:src="@drawable/ic_favorites"
+                app:layout_constraintBottom_toTopOf="@+id/favoritesText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toEndOf="@+id/likeText" />
+
+            <TextView
+                android:id="@+id/favoritesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="112dp"
+                android:layout_marginBottom="8dp"
+                android:text="Favorite"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/likeIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="4dp"
+                android:contentDescription="Like Icon"
+                android:src="@drawable/ic_heart"
+                android:tint="#403A3A"
+                app:layout_constraintBottom_toTopOf="@+id/likeText"
+                app:layout_constraintEnd_toStartOf="@+id/favoritesIcon"
+                app:layout_constraintHorizontal_bias="0.413"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/likeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginBottom="8dp"
+                android:text="Like"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@android:color/black" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

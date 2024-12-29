@@ -24,9 +24,13 @@ import androidx.core.content.FileProvider;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.firestore.FirebaseFirestore;
 import android.Manifest;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,6 +38,20 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import okhttp3.MultipartBody;
+
+import okhttp3.Request;
+import okhttp3.RequestBody;
+
+
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.OkHttpClient;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -47,7 +65,7 @@ public class PostActivity extends AppCompatActivity {
     private Bitmap capturedImageBitmap; // Store the captured photo
     private ImageView capturedImageView; // To display the image
 
-
+    private File currentImageFile; // Added this var as a member variable
 
 
     @Override
@@ -73,10 +91,6 @@ public class PostActivity extends AppCompatActivity {
         captureImageButton.setOnClickListener(v -> dispatchTakePictureIntent());
         submitPostButton.setOnClickListener(v -> submitPost());
 
-
-        // Set up listeners
-//        captureImageButton.setOnClickListener(v -> dispatchTakePictureIntent());
-//        submitPostButton.setOnClickListener(v -> submitPost());
     }
 
     private void dispatchTakePictureIntent() {
@@ -84,39 +98,46 @@ public class PostActivity extends AppCompatActivity {
 
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
-            try {
-                photoFile = createImageFile(); // Create a temporary file for the image
-            } catch (IOException ex) {
+            try{
+                currentImageFile = createImageFile(); // Create a temporary file for the image
+                if (currentImageFile != null) {
+                    photoUri = FileProvider.getUriForFile(this, "com.example.urifoodie.fileprovider", currentImageFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(this, "Could not create file for the image.", Toast.LENGTH_SHORT).show();
+                }
+            }catch (IOException ex) {
                 Log.e("PostActivity", "Error creating image file: ", ex);
                 Toast.makeText(this, "Error creating image file!", Toast.LENGTH_SHORT).show();
-            }
-
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(this, "com.example.urifoodie.fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            } else {
-                Toast.makeText(this, "Could not create file for the image.", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "No camera app available!", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-    }
 
+        // Get the directory for the app's private pictures directory.
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        // Create an image file in the specified directory
+        File imageFile = new File(storageDir, imageFileName + ".jpg");
+
+        // Create the image file. If the file already exists, this method will not override it.
+        if (!imageFile.exists()) {
+            boolean created = imageFile.createNewFile();
+            if (!created) {
+                Log.e("Imgur Upload", "Failed to create the file: " + imageFile.getAbsolutePath());
+                throw new IOException("Failed to create file: " + imageFile.getAbsolutePath());
+            }
+        }
+
+        return imageFile;
+    }
 
 
 
@@ -133,125 +154,153 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Display the photo in the ImageView using the Uri
             capturedImageView.setImageURI(photoUri);
+            Log.d("UploadImage", "Attempting to upload image to Imgur");
+
+            if (currentImageFile != null) {
+                // Provide the ImageUploadCallback to handle the image URL after upload
+                uploadImageToImgur(currentImageFile, imageUrl -> {
+                    Log.d("Imgur Upload", "Image URL: " + imageUrl);
+                    Toast.makeText(PostActivity.this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                });
+            } else {
+                Log.e("Imgur Upload", "Current image file is null.");
+            }
         } else {
             Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-
     private void submitPost() {
         String postText = postTextInput.getText().toString().trim();
         String recipeText = recipeTextInput.getText().toString().trim();
-        if (postText.isEmpty()) {
-            Toast.makeText(this, "Post text cannot be empty.", Toast.LENGTH_SHORT).show();
+
+        if (postText.isEmpty() || recipeText.isEmpty()) {
+            Toast.makeText(this, "Post text and recipe text cannot be empty.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        savePostToFirebase(postText, recipeText);
+        if (currentImageFile == null) {
+            Toast.makeText(this, "Please capture an image before submitting.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Upload the image to Imgur and then save the post to Firebase
+        uploadImageToImgur(currentImageFile, imageUrl -> savePostToFirebase(postText, recipeText, imageUrl));
     }
-    private void savePostToFirebase(String postText, String recipeText) {
+
+    private void savePostToFirebase(String postText, String recipeText, String imageUrl) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            // Use the correct constructor
             Post newPost = new Post(
-                    user.getDisplayName(), // username
-                    postText,              // postText
-                    recipeText,            // recipeText
-                    Timestamp.now()        // current timestamp
+                    user.getDisplayName(),
+                    postText,
+                    recipeText,
+                    Timestamp.now(),
+                    imageUrl
             );
 
             db.collection("Users").document(user.getUid()).collection("Posts").add(newPost)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(this, "Post submitted successfully!", Toast.LENGTH_SHORT).show();
-                        finish(); // Return to the previous activity
+                        Toast.makeText(PostActivity.this, "Post submitted successfully!", Toast.LENGTH_SHORT).show();
+                        finish(); // Return to Home page
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Failed to submit post.", Toast.LENGTH_SHORT).show();
-                        Log.e("PostActivity", "Error submitting post", e);
+                        Toast.makeText(PostActivity.this, "Failed to submit post.", Toast.LENGTH_SHORT).show();
+                        Log.e("Firebase Upload", "Error submitting post", e);
                     });
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
+    private void uploadImageToImgur(File imageFile, ImageUploadCallback callback) {
+        if (!imageFile.exists()) {
+            Log.e("Imgur Upload", "Image file does not exist: " + imageFile.getAbsolutePath());
+            return;
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image", imageFile.getName(), RequestBody.create(imageFile, okhttp3.MediaType.parse("image/jpeg")))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://api.imgur.com/3/upload")
+                .header("Authorization", "Client-ID " + "5f518c75ddb3422") // Replace with your actual Client ID
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Imgur Upload", "Failed to upload image: " + e.getMessage());
+                runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed!", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String jsonData = response.body().string();
+                        JSONObject jsonObject = new JSONObject(jsonData);
+                        String imageUrl = jsonObject.getJSONObject("data").getString("link");
+
+                        Log.d("Imgur Upload", "Image uploaded successfully: " + imageUrl);
+
+                        // Pass the imageUrl to the callback
+                        runOnUiThread(() -> callback.onSuccess(imageUrl));
+                    } catch (JSONException e) {
+                        Log.e("Imgur Upload", "JSON parsing error: " + e.getMessage());
+                        runOnUiThread(() -> Toast.makeText(PostActivity.this, "Error parsing Imgur response.", Toast.LENGTH_SHORT).show());
+                    }
+                } else {
+                    Log.e("Imgur Upload", "Server responded with: " + response.code());
+                    runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed: " + response.code(), Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
+    }
 
 
-//    private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        } else {
-//            Toast.makeText(this, "No camera app available", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            capturedImageView.setImageBitmap(imageBitmap);
-//        }
-//    }
 
-//    private void submitPost() {
-//        String postText = postTextInput.getText().toString().trim();
-//        if (postText.isEmpty()) {
-//            Toast.makeText(this, "Post text cannot be empty.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        String encodedImage = encodeImage();
-//        savePostToFirebase(postText, encodedImage);
-//    }
+    private void savePostWithImageUrl(String imageUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String postText = postTextInput.getText().toString().trim();
+        String recipeText = recipeTextInput.getText().toString().trim();
 
-//    private String encodeImage() {
-//        if (capturedImageView.getDrawable() instanceof BitmapDrawable) {
-//            Bitmap bitmap = ((BitmapDrawable) capturedImageView.getDrawable()).getBitmap();
-//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-//            byte[] byteArray = byteArrayOutputStream.toByteArray();
-//            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-//        }
-//        return "";
-//    }
+        if (user != null) {
+            Post newPost = new Post(
+                    user.getDisplayName(),
+                    postText,
+                    recipeText,
+                    Timestamp.now(), imageUrl
+            );
 
-//    private void savePostToFirebase(String postText, String encodedImage) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        if (user != null) {
-//            Post newPost = new Post(
-//                    user.getDisplayName(), // username
-//                    postText,              // postText
-//                    recipeTextInput.getText().toString(), // recipeText
-//                    encodedImage,          // imageUrl
-//                    Timestamp.now(),       // timestamp
-//                    user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "" // userProfilePicUrl
-//            );
-//
-//            db.collection("Users").document(user.getUid()).collection("Posts").add(newPost)
-//                    .addOnSuccessListener(documentReference -> {
-//                        Toast.makeText(this, "Post submitted successfully!", Toast.LENGTH_SHORT).show();
-//                        finish(); // Return to the previous activity
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        Toast.makeText(this, "Failed to submit post.", Toast.LENGTH_SHORT).show();
-//                        Log.e("PostActivity", "Error submitting post", e);
-//                    });
-//        } else {
-//            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-//        }
-//    }
+            db.collection("Users").document(user.getUid()).collection("Posts").add(newPost)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(PostActivity.this, "Post uploaded successfully!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(PostActivity.this, "Post upload failed.", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    // interface for image upload success
+    interface ImageUploadCallback {
+        void onSuccess(String imageUrl);
+    }
+
+
 }

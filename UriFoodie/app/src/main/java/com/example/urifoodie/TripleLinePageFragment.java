@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,6 @@ public class TripleLinePageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,15 +68,27 @@ public class TripleLinePageFragment extends Fragment {
 
         // Initialize the Log Out button
         btnLogout = view.findViewById(R.id.btnLogout);
+        if (btnLogout == null) {
+            Log.e("TripleLinePageFragment", "btnLogout is null. Check your layout file.");
+        }
 
         // Log Out Button Click Listener
         btnLogout.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut(); // Logs out the user
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            getActivity().finish(); // Closes the current activity
+            try {
+                FirebaseAuth.getInstance().signOut(); // Logs out the user
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                if (getActivity() != null) {
+                    getActivity().finish(); // Closes the current activity
+                } else {
+                    Log.e("TripleLinePageFragment", "Activity is null.");
+                }
+            } catch (Exception e) {
+                Log.e("TripleLinePageFragment", "Error during log out", e);
+            }
         });
 
         return view;
     }
+
 }

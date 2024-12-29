@@ -15,15 +15,15 @@ public class Post {
     public Post() {}
 
     // New constructor for fewer parameters
-    public Post (String username, String postText, String recipeText, Timestamp timestamp) {
+    public Post (String username, String postText, String recipeText, Timestamp timestamp, String imageUrl) {
         this.username = username;
         this.postText = postText;
         this.recipeText = recipeText;
-//        this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl;
         this.timestamp = Timestamp.now(); // Automatically add a timestamp
     }
 
-    // Existing full constructor
+    // OLD CODE Existing full constructor
 //    public Post(String username, String postText, String recipeText, String imageUrl, Timestamp timestamp, String userProfilePicUrl) {
 //        this.username = username;
 //        this.postText = postText;
@@ -56,13 +56,13 @@ public class Post {
         this.recipeText = recipeText;
     }
 
-//    public String getImageUrl() {
-//        return imageUrl;
-//    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-//    public void setImageUrl(String imageUrl) {
-//        this.imageUrl = imageUrl;
-//    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;

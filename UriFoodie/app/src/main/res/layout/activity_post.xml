@@ -39,7 +39,8 @@
         android:inputType="textMultiLine"
         android:minLines="5"
         android:padding="16dp"
-        android:textColorHint="#000000"
+        android:textColor="#000000"
+        android:textColorHint="#838181"
         android:textColorLink="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +76,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/postTextInput" />
+        app:layout_constraintTop_toBottomOf="@id/postTextInput"
+        android:backgroundTint="@color/buttonColor"/>
 
     <Button
         android:id="@+id/submitPostButton"
@@ -92,7 +94,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/captureImageButton" />
+        app:layout_constraintTop_toBottomOf="@id/captureImageButton"
+        android:backgroundTint="@color/buttonColor"/>
 
     <EditText
         android:id="@+id/recipie"
@@ -104,7 +107,8 @@
         android:gravity="start|top"
         android:hint="Enter the recipe"
         android:inputType="textMultiLine"
-        android:textColorHint="#000000"
+        android:textColor="#000000"
+        android:textColorHint="#838181"
         android:textColorLink="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/captureImageButton"

@@ -58,6 +58,11 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
+        // Set up other UI components
+        setupUI(view);
+        // Set up listeners
+        setupListeners();
+
         // Initialize UI components
         postList = view.findViewById(R.id.postList);
         postList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,10 +70,7 @@ public class HomePageFragment extends Fragment {
         // Set up adapter
         postAdapter = new PostListRecyclerViewAdapter(posts);
         postList.setAdapter(postAdapter);
-        // Set up other UI components
-        setupUI(view);
-        // Set up listeners
-        setupListeners();
+
 
         submitPostButton = view.findViewById(R.id.btnPost);
         submitPostButton.setOnClickListener(new View.OnClickListener() {
@@ -93,11 +95,13 @@ public class HomePageFragment extends Fragment {
     }
     // Helper method to open a new fragment
     private void openFragment(Fragment fragment) {
+        Log.d("HomePageFragment", "Opening fragment: " + fragment.getClass().getSimpleName());
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
     }
+
     /**
      * Sets up click listeners for UI components.
      */
@@ -145,6 +149,10 @@ public class HomePageFragment extends Fragment {
         favoritesIcon = view.findViewById(R.id.favoritesIcon);
         messagesIcon = view.findViewById(R.id.messagesIcon);
         menuIcon = view.findViewById(R.id.menuIcon);
+        if (menuIcon == null) {
+            Log.e("HomePageFragment", "menuIcon is null. Check your layout file.");
+        }
+
 
         notificationsIcon.setOnClickListener(v -> openFragment(new NotificationsPageFragment()));
         favoritesIcon.setOnClickListener(v -> openFragment(new FavoritePageFragment()));
