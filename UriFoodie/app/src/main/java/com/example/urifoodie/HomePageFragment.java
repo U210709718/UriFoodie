@@ -79,11 +79,7 @@ public class HomePageFragment extends Fragment {
 
             }
         });
-
-
-
-
-
+        
         return view;
     }
     @Override
