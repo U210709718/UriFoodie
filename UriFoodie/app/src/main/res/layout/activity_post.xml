@@ -39,7 +39,12 @@
         android:inputType="textMultiLine"
         android:minLines="5"
         android:padding="16dp"
+<<<<<<< HEAD
         android:textColorHint="#000000"
+=======
+        android:textColor="#000000"
+        android:textColorHint="#838181"
+>>>>>>> main
         android:textColorLink="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +64,10 @@
         app:layout_constraintStart_toEndOf="@+id/recipie"
         app:layout_constraintTop_toBottomOf="@id/postTextInput"
         app:layout_constraintVertical_bias="0.0" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 
     <Button
         android:id="@+id/captureImageButton"
@@ -74,7 +83,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/postTextInput" />
+        app:layout_constraintTop_toBottomOf="@id/postTextInput"
+        android:backgroundTint="@color/buttonColor"/>
 
     <Button
         android:id="@+id/submitPostButton"
@@ -84,14 +94,19 @@
         android:background="@drawable/button_light_blue"
         android:padding="12dp"
         android:text="Submit Post"
+<<<<<<< HEAD
         style="null"
+=======
+        style="@null"
+>>>>>>> main
         android:textColor="@android:color/white"
         android:textColorLink="#03A9F4"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/captureImageButton" />
+        app:layout_constraintTop_toBottomOf="@id/captureImageButton"
+        android:backgroundTint="@color/buttonColor"/>
 
     <EditText
         android:id="@+id/recipie"
@@ -103,7 +118,12 @@
         android:gravity="start|top"
         android:hint="Enter the recipe"
         android:inputType="textMultiLine"
+<<<<<<< HEAD
         android:textColorHint="#000000"
+=======
+        android:textColor="#000000"
+        android:textColorHint="#838181"
+>>>>>>> main
         android:textColorLink="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/captureImageButton"

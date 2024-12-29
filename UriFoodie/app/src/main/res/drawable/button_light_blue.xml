@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="#ADD8E6" /> <!-- Light blue color -->
     <corners android:radius="8dp" /> <!-- Optional: Rounded corners -->
 </shape>
+=======
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#ADD8E6" /> <!-- Light blue color -->
+    <corners android:radius="8dp" /> <!-- Optional: Rounded corners -->
+</shape>
+>>>>>>> main

@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFC70039</color>
     <color name="lightGray">#D3D3D3</color>
     <color name="gray">#808080</color>
+<<<<<<< HEAD
 
     <color name="lightBlue">#ACD3F0</color>
+=======
+>>>>>>> main
     <color name="green">#4CAF50</color>
-    <color name="primaryColor">#6200EE</color> <!-- Example: A purple color -->
+
+    <!-- Background and Surface Colors -->
+    <color name="backgroundLight">#F9F9F9</color> <!-- Light background -->
+    <color name="backgroundDark">#121212</color> <!-- Dark background -->
+    <color name="surfaceLight">#FFFFFF</color> <!-- Light surface -->
+    <color name="surfaceDark">#1E1E1E</color> <!-- Dark surface -->
+
+    <!-- Blue Shades -->
+    <color name="lightBlue">#ACD3F0</color>
+    <color name="blue">#53739E</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_700">#1976D2</color>
+
+    <!-- Purple Shades -->
     <color name="purple_500">#9C27B0</color>
-    <color name="blue">#DD3D5D87</color> <!-- Example Purple Color -->
+    <color name="purple_700">#7B1FA2</color>
+
+    <!-- Teal Shades -->
+    <color name="teal_200">#80CBC4</color>
+    <color name="teal_700">#00796B</color>
+
+    <!-- Error Colors -->
+    <color name="red_200">#EF9A9A</color>
+    <color name="red_700">#D32F2F</color>
+
+    <!-- Primary and Secondary Colors -->
+    <color name="primaryColor">#6200EE</color> <!-- Example: Purple Primary -->
+    <color name="primaryVariant">#3700B3</color>
+    <color name="secondaryColor">#03DAC6</color>
+    <color name="secondaryVariant">#018786</color>
+
+    <!-- Text Colors -->
+    <color name="textPrimaryLight">#000000</color> <!-- Black for light theme -->
+    <color name="textSecondaryLight">#808080</color> <!-- Gray for light theme -->
+    <color name="textPrimaryDark">#FFFFFF</color> <!-- White for dark theme -->
+    <color name="textSecondaryDark">#B0B0B0</color> <!-- Light gray for dark theme -->
+
+    <color name="buttonColor">#3D5D87</color>
+
+
+    <!-- Accent Colors -->
+    <color name="accent">#03A9F4</color>
 </resources>
