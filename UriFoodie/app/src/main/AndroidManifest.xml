@@ -24,36 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
-<<<<<<< HEAD
-
-        <!-- Correct FileProvider Configuration -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.urifoodie.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
-        <activity
-            android:name=".PostActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false" />
-        <activity
-            android:name=".RegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-=======
->>>>>>> main
 
         <!-- Correct FileProvider Configuration -->
         <provider
