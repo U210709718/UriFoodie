@@ -38,7 +38,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+<<<<<<< HEAD
 import java.util.concurrent.TimeUnit;
+=======
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+>>>>>>> origin
 
 import okhttp3.MultipartBody;
 
@@ -69,12 +74,17 @@ public class PostActivity extends AppCompatActivity {
 
     private File currentImageFile; // Added this var as a member variable
 
+    private ExecutorService executorService;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        // Initialize the ExecutorService
+        executorService = Executors.newSingleThreadExecutor(); // single background thread
 
         // Request camera permission at runtime if not granted
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -254,6 +264,7 @@ public class PostActivity extends AppCompatActivity {
             return;
         }
 
+<<<<<<< HEAD
         OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
                 .writeTimeout(30, TimeUnit.SECONDS)  // Write timeout
@@ -272,36 +283,63 @@ public class PostActivity extends AppCompatActivity {
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
+=======
+        // Submit the upload task to ExecutorService for background processing
+        executorService.submit(new Runnable() {
+>>>>>>> origin
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("Imgur Upload", "Failed to upload image: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed!", Toast.LENGTH_SHORT).show());
-            }
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("image", imageFile.getName(), RequestBody.create(imageFile, okhttp3.MediaType.parse("image/jpeg")))
+                            .build();
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        String jsonData = response.body().string();
-                        JSONObject jsonObject = new JSONObject(jsonData);
-                        String imageUrl = jsonObject.getJSONObject("data").getString("link");
+                    Request request = new Request.Builder()
+                            .url("https://api.imgur.com/3/upload")
+                            .header("Authorization", "Client-ID " + "5f518c75ddb3422") // Replace with your actual Client ID
+                            .post(requestBody)
+                            .build();
 
-                        Log.d("Imgur Upload", "Image uploaded successfully: " + imageUrl);
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.e("Imgur Upload", "Failed to upload image: " + e.getMessage());
+                            runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed!", Toast.LENGTH_SHORT).show());
+                        }
 
-                        // Pass the imageUrl to the callback
-                        runOnUiThread(() -> callback.onSuccess(imageUrl));
-                    } catch (JSONException e) {
-                        Log.e("Imgur Upload", "JSON parsing error: " + e.getMessage());
-                        runOnUiThread(() -> Toast.makeText(PostActivity.this, "Error parsing Imgur response.", Toast.LENGTH_SHORT).show());
-                    }
-                } else {
-                    Log.e("Imgur Upload", "Server responded with: " + response.code());
-                    runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed: " + response.code(), Toast.LENGTH_SHORT).show());
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                try {
+                                    String jsonData = response.body().string();
+                                    JSONObject jsonObject = new JSONObject(jsonData);
+                                    String imageUrl = jsonObject.getJSONObject("data").getString("link");
+
+                                    Log.d("Imgur Upload", "Image uploaded successfully: " + imageUrl);
+
+                                    // Pass the imageUrl to the callback on the UI thread
+                                    runOnUiThread(() -> callback.onSuccess(imageUrl));
+                                } catch (JSONException e) {
+                                    Log.e("Imgur Upload", "JSON parsing error: " + e.getMessage());
+                                    runOnUiThread(() -> Toast.makeText(PostActivity.this, "Error parsing Imgur response.", Toast.LENGTH_SHORT).show());
+                                }
+                            } else {
+                                Log.e("Imgur Upload", "Server responded with: " + response.code());
+                                runOnUiThread(() -> Toast.makeText(PostActivity.this, "Image upload failed: " + response.code(), Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> Toast.makeText(PostActivity.this, "Error during upload.", Toast.LENGTH_SHORT).show());
                 }
             }
         });
     }
 
+<<<<<<< HEAD
 
 
     /* OLD METHOD
@@ -326,13 +364,21 @@ public class PostActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         Toast.makeText(PostActivity.this, "Post upload failed.", Toast.LENGTH_SHORT).show();
                     });
+=======
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown(); // Clean up the ExecutorService to avoid memory leaks
+>>>>>>> origin
         }
     }*/
 
-    // interface for image upload success
+    // Interface for image upload success
     interface ImageUploadCallback {
         void onSuccess(String imageUrl);
     }
+<<<<<<< HEAD
 
 
     /*private void savePostToFirebase(String postText, String recipeText) {
@@ -384,4 +430,6 @@ public class PostActivity extends AppCompatActivity {
 <<<<<<< HEAD
     } Old version of this method!!*/
 
+=======
+>>>>>>> origin
 }
