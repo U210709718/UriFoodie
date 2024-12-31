@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MultipartBody;
 
@@ -84,7 +85,7 @@ public class PostActivity extends AppCompatActivity {
 
         // Initialize UI components
         postTextInput = findViewById(R.id.postTextInput);
-        recipeTextInput = findViewById(R.id.recipie);
+        recipeTextInput = findViewById(R.id.recipe);
 
         capturedImageView = findViewById(R.id.capturedImageView); // Add this line
         submitPostButton = findViewById(R.id.submitPostButton);
@@ -203,34 +204,62 @@ public class PostActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            Post newPost = new Post(
-                    user.getDisplayName(),
-                    postText,
-                    recipeText,
-                    Timestamp.now(),
-                    imageUrl
-            );
+            String userId = user.getUid();
 
-            db.collection("Users").document(user.getUid()).collection("Posts").add(newPost)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PostActivity.this, "Post submitted successfully!", Toast.LENGTH_SHORT).show();
-                        finish(); // Return to Home page
+
+            db.collection("Users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("username");
+                            if (username == null || username.isEmpty()) {
+                                username = "Anonymous";
+                            }
+
+
+                            Post newPost = new Post(
+                                    username,
+                                    postText,
+                                    recipeText,
+                                    Timestamp.now(),
+                                    imageUrl
+                            );
+
+                            db.collection("Users").document(userId).collection("Posts").add(newPost)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Toast.makeText(PostActivity.this, "Post submitted successfully!", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(PostActivity.this, "Failed to submit post.", Toast.LENGTH_SHORT).show();
+                                        Log.e("Firebase Upload", "Error submitting post", e);
+                                    });
+
+                        } else {
+                            Toast.makeText(this, "User document not found!", Toast.LENGTH_SHORT).show();
+                        }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(PostActivity.this, "Failed to submit post.", Toast.LENGTH_SHORT).show();
-                        Log.e("Firebase Upload", "Error submitting post", e);
+                        Toast.makeText(this, "Failed to fetch username from Firestore.", Toast.LENGTH_SHORT).show();
+                        Log.e("Firestore Error", "Error fetching user document", e);
                     });
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
+
     }
+
     private void uploadImageToImgur(File imageFile, ImageUploadCallback callback) {
         if (!imageFile.exists()) {
             Log.e("Imgur Upload", "Image file does not exist: " + imageFile.getAbsolutePath());
             return;
         }
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
+                .writeTimeout(30, TimeUnit.SECONDS)  // Write timeout
+                .readTimeout(30, TimeUnit.SECONDS)   // Read timeout
+                .build();
+
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("image", imageFile.getName(), RequestBody.create(imageFile, okhttp3.MediaType.parse("image/jpeg")))
@@ -275,7 +304,7 @@ public class PostActivity extends AppCompatActivity {
 
 
 
-
+    /* OLD METHOD
     private void savePostWithImageUrl(String imageUrl) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -298,7 +327,7 @@ public class PostActivity extends AppCompatActivity {
                         Toast.makeText(PostActivity.this, "Post upload failed.", Toast.LENGTH_SHORT).show();
                     });
         }
-    }
+    }*/
 
     // interface for image upload success
     interface ImageUploadCallback {

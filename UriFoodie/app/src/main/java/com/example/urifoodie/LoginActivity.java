@@ -47,11 +47,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnLogin.setOnClickListener(v -> {
-            progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             String email = String.valueOf(EditTextEmail.getText());
             String password = String.valueOf(EditTextPassword.getText());
+            onLoginClicked(email, password);
 
-            if (TextUtils.isEmpty(email)) {
+            /*if (TextUtils.isEmpty(email)) {
                 Toast.makeText(LoginActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 return;
@@ -75,7 +76,40 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e("LoginError", errorMessage);
                     Toast.makeText(LoginActivity.this, "Authentication Failed: " + errorMessage, Toast.LENGTH_LONG).show();
                 }
-            });
+            });   OLD METHOD IS TURNED COMMENTED FOR UNIT TEST METHOD IMPLEMENTATION*/
         });
+
+
+
+    }
+
+    private void onLoginClicked(String email, String password) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this, "Enter email", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, MainActivity.class));
+                        finish();
+                    } else {
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error occurred";
+                        Log.e("LoginError", errorMessage);
+                        Toast.makeText(this, "Authentication Failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

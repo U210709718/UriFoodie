@@ -125,7 +125,7 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserNameToFirestore(String userId, String username) {
+    public void saveUserNameToFirestore(String userId, String username) {
         DocumentReference docRef = firestore.collection("Users").document(userId);
         Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);

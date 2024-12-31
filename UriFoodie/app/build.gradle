@@ -47,6 +47,8 @@ dependencies {
 
 
     implementation 'com.github.bumptech.glide:glide:5.0.0-rc01'
+    implementation libs.core
+    testImplementation libs.androidx.junit
     annotationProcessor 'com.github.bumptech.glide:compiler:5.0.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // Latest version
     implementation 'androidx.appcompat:appcompat:1.6.1' // Latest version
@@ -60,7 +62,7 @@ dependencies {
 
 
 
-    implementation 'com.google.firebase:firebase-firestore:24.5.0'
+    implementation 'com.google.firebase:firebase-firestore:25.1.1'
     implementation 'com.google.firebase:firebase-auth:22.1.0'
     implementation 'com.google.firebase:firebase-storage:20.3.0'
     implementation 'com.github.bumptech.glide:glide:4.15.1'
@@ -79,9 +81,18 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.firebase.database
     implementation libs.firebase.firestore
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+
+    //test dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation 'com.google.firebase:firebase-auth:22.1.0'
+
+
+
     implementation 'com.squareup.picasso:picasso:2.8'
 
 }
