@@ -89,7 +89,7 @@ public class PostActivity extends AppCompatActivity {
 
         // Initialize UI components
         postTextInput = findViewById(R.id.postTextInput);
-        recipeTextInput = findViewById(R.id.recipie);
+        recipeTextInput = findViewById(R.id.recipe);
 
         capturedImageView = findViewById(R.id.capturedImageView); // Add this line
         submitPostButton = findViewById(R.id.submitPostButton);
