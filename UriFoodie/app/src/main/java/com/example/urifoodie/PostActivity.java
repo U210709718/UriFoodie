@@ -38,12 +38,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-<<<<<<< HEAD
+
 import java.util.concurrent.TimeUnit;
-=======
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
->>>>>>> origin
+
 
 import okhttp3.MultipartBody;
 
@@ -263,30 +262,8 @@ public class PostActivity extends AppCompatActivity {
             Log.e("Imgur Upload", "Image file does not exist: " + imageFile.getAbsolutePath());
             return;
         }
-
-<<<<<<< HEAD
-        OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
-                .writeTimeout(30, TimeUnit.SECONDS)  // Write timeout
-                .readTimeout(30, TimeUnit.SECONDS)   // Read timeout
-                .build();
-
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("image", imageFile.getName(), RequestBody.create(imageFile, okhttp3.MediaType.parse("image/jpeg")))
-                .build();
-
-        Request request = new Request.Builder()
-                .url("https://api.imgur.com/3/upload")
-                .header("Authorization", "Client-ID " + "5f518c75ddb3422") // Replace with your actual Client ID
-                .post(requestBody)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-=======
-        // Submit the upload task to ExecutorService for background processing
         executorService.submit(new Runnable() {
->>>>>>> origin
+
             @Override
             public void run() {
                 try {
@@ -339,47 +316,21 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD
 
-
-    /* OLD METHOD
-    private void savePostWithImageUrl(String imageUrl) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String postText = postTextInput.getText().toString().trim();
-        String recipeText = recipeTextInput.getText().toString().trim();
-
-        if (user != null) {
-            Post newPost = new Post(
-                    user.getDisplayName(),
-                    postText,
-                    recipeText,
-                    Timestamp.now(), imageUrl
-            );
-
-            db.collection("Users").document(user.getUid()).collection("Posts").add(newPost)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(PostActivity.this, "Post uploaded successfully!", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(PostActivity.this, "Post upload failed.", Toast.LENGTH_SHORT).show();
-                    });
-=======
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (executorService != null) {
             executorService.shutdown(); // Clean up the ExecutorService to avoid memory leaks
->>>>>>> origin
         }
-    }*/
+    }
 
     // Interface for image upload success
     interface ImageUploadCallback {
         void onSuccess(String imageUrl);
     }
-<<<<<<< HEAD
 
+}
 
     /*private void savePostToFirebase(String postText, String recipeText) {
 =======
@@ -430,6 +381,3 @@ public class PostActivity extends AppCompatActivity {
 <<<<<<< HEAD
     } Old version of this method!!*/
 
-=======
->>>>>>> origin
-}

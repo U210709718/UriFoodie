@@ -102,6 +102,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 return;
             }
 
+            if (!PasswordValidator.isPasswordStrong(password)) {
+                Toast.makeText(RegistrationActivity.this, "Password must be at least 8 characters long and include uppercase, lowercase, digits, and special characters.", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+
             // Create a new user in Firebase Auth
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.GONE);
