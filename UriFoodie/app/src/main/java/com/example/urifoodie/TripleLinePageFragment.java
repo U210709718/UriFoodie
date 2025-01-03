@@ -1,5 +1,7 @@
 package com.example.urifoodie;
 
+//import static android.os.Build.VERSION_CODES.R; PROBLEM WITH THIS LINE! Resources file is not shown when this
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+
+
 
 import com.google.firebase.auth.FirebaseAuth;
 
