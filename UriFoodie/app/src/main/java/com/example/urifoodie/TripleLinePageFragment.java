@@ -1,6 +1,7 @@
 package com.example.urifoodie;
 
-//import static android.os.Build.VERSION_CODES.R; PROBLEM WITH THIS LINE! Resources file is not shown when this
+//import static android.os.Build.VERSION_CODES.R; PROBLEM WITH THIS LINE! Resources file is not shown when this is imported
+
 
 import android.content.Intent;
 import android.os.Bundle;
