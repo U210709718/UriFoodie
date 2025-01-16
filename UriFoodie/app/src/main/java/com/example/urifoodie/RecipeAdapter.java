@@ -12,7 +12,6 @@ import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
-
     private List<Recipe> recipeList;
 
     public RecipeAdapter(List<Recipe> recipeList) {
@@ -22,16 +21,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recipe, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe, parent, false);
         return new RecipeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
-        holder.recipeTitle.setText(recipe.getTitle());
-        holder.recipeIngredients.setText(recipe.getIngredients());
+        holder.ingredientsTextView.setText(recipe.getIngredients());
     }
 
     @Override
@@ -40,12 +37,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeTitle, recipeIngredients;
+        TextView ingredientsTextView;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
-            recipeTitle = itemView.findViewById(R.id.recipeTitle);
-            recipeIngredients = itemView.findViewById(R.id.recipeIngredients);
+            ingredientsTextView = itemView.findViewById(R.id.recipeIngredients);
         }
     }
 

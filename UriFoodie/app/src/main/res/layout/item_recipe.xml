@@ -8,14 +8,6 @@
     android:background="@color/white"
     android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/recipeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recipe Title"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/recipeIngredients"

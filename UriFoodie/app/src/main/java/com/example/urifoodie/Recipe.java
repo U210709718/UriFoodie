@@ -1,19 +1,21 @@
 package com.example.urifoodie;
 
 public class Recipe {
-    private String title;
     private String ingredients;
 
-    public Recipe(String title, String ingredients) {
-        this.title = title;
-        this.ingredients = ingredients;
+    // Empty constructor required for Firestore deserialization
+    public Recipe() {
     }
 
-    public String getTitle() {
-        return title;
+    public Recipe(String ingredients) {
+        this.ingredients = ingredients;
     }
 
     public String getIngredients() {
         return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
     }
 }
