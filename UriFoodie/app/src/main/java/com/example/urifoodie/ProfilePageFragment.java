@@ -10,10 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 public class ProfilePageFragment extends Fragment {
     private static final String ARG_USERNAME = "username";
@@ -24,6 +29,10 @@ public class ProfilePageFragment extends Fragment {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
+
+    RecyclerView profileGallery;
+    ImageAdapter imageAdapter;
+    ArrayList<String> imageUrls = new ArrayList<>();
 
 
     public ProfilePageFragment() {
@@ -41,9 +50,9 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            username = getArguments().getString(ARG_USERNAME);
-        }
+        mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        currentUser = mAuth.getCurrentUser();
     }
 
     @Nullable
@@ -51,20 +60,37 @@ public class ProfilePageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
-
-        // Initialize UI elements
         userNameTextView = view.findViewById(R.id.userName);
         postsCountTextView = view.findViewById(R.id.postsCount);
+        profileGallery = view.findViewById(R.id.profileGallery);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        profileGallery.setLayoutManager(new GridLayoutManager(getContext(), 3)); // Grid for images
+        imageAdapter = new ImageAdapter(imageUrls);
+        profileGallery.setAdapter(imageAdapter);
+
         if (currentUser != null) {
             String userId = currentUser.getUid();
             getUsernameFromFirestore(userId);
             getPostsCountFromFirestore(userId);
+            loadImagesFromFirestore(userId);
         }
         return view;
+    }
+    private void loadImagesFromFirestore(String userId) {
+        firestore.collection("Users").document(userId).collection("Posts")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    imageUrls.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String imageUrl = document.getString("imageUrl");
+                        if (imageUrl != null) {
+                            imageUrls.add(imageUrl);
+                        }
+                    }
+
+                    imageAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Log.e("TAG", "Error loading images: " + e.getMessage()));
     }
 
     public void getUsernameFromFirestore(String userId) {
@@ -93,5 +119,6 @@ public class ProfilePageFragment extends Fragment {
                     Log.e("TAG", "Error retrieving posts count: " + e.getMessage());
                 });
     }
+
 
 }

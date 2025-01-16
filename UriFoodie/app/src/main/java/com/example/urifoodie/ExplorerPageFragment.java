@@ -1,6 +1,7 @@
 package com.example.urifoodie;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +25,11 @@ import androidx.fragment.app.Fragment;
  * create an instance of this fragment.
  */
 public class ExplorerPageFragment extends Fragment {
+
+    private RecyclerView explorerGrid;
+    private ExplorerAdapter explorerAdapter;
+    private List<Post> postList;
+    private String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,7 +74,53 @@ public class ExplorerPageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_explorer_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_explorer_page, container, false);
+
+        explorerGrid = view.findViewById(R.id.explorerGrid);
+        explorerGrid.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        postList = new ArrayList<>();
+        explorerAdapter = new ExplorerAdapter(postList);
+        explorerGrid.setAdapter(explorerAdapter);
+
+        loadPosts();
+
+        return view;
     }
+
+
+    private void loadPosts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("posts")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        postList.clear(); // Clear existing posts
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String imageUrl = document.getString("imageUrl");
+                            String username = document.getString("username");
+
+                            // Ensure required fields are non-null
+                            if (imageUrl != null && username != null) {
+                                postList.add(new Post(username, null, null, null, imageUrl));
+                            }
+                        }
+
+                        // Notify adapter about data change
+                        explorerAdapter.notifyDataSetChanged();
+
+                        Log.d("Firestore", "Posts loaded: " + postList.size());
+                    } else {
+                        Log.e("Firestore", "Error fetching posts", task.getException());
+                    }
+                });
+    }
+
+
+
+
+
+
+
 }

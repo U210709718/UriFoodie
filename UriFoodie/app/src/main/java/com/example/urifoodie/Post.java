@@ -23,6 +23,11 @@ public class Post {
         this.imageUrl = imageUrl;
         this.timestamp = Timestamp.now(); // Automatically add a timestamp
     }
+    // Simplified constructor for minimal data
+    public Post(String imageUrl, String username) {
+        this.imageUrl = imageUrl;
+        this.username = username;
+    }
 
 
     // OLD CODE Existing full constructor
