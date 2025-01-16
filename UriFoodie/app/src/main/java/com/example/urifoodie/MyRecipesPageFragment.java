@@ -32,6 +32,7 @@ public class MyRecipesPageFragment extends Fragment {
     private List<Recipe> recipeList = new ArrayList<>();
     private FirebaseFirestore firestore;
     private CollectionReference recipesCollection;
+    private CollectionReference postsCollection;
 
     private EditText inputIngredients;
 
@@ -53,6 +54,7 @@ public class MyRecipesPageFragment extends Fragment {
         firestore = FirebaseFirestore.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         recipesCollection = firestore.collection("Users").document(userId).collection("Recipes");
+        postsCollection = firestore.collection("Users").document(userId).collection("Posts");
 
         // Load recipes from Firestore
         loadRecipesFromFirestore();
@@ -71,13 +73,54 @@ public class MyRecipesPageFragment extends Fragment {
     }
 
     private void loadRecipesFromFirestore() {
+        recipeList.clear();
+
+        // Load from Recipes collection
         recipesCollection.get().addOnSuccessListener(querySnapshot -> {
-            recipeList.clear();
             for (com.google.firebase.firestore.DocumentSnapshot document : querySnapshot.getDocuments()) {
                 Recipe recipe = document.toObject(Recipe.class);
                 recipeList.add(recipe);
             }
             recipeAdapter.notifyDataSetChanged();
+
+            // Load from Posts collection and combine results
+            loadRecipesFromPosts();
+        });
+    }
+
+    private void loadRecipesFromPosts() {
+        postsCollection.get().addOnSuccessListener(querySnapshot -> {
+            for (com.google.firebase.firestore.DocumentSnapshot document : querySnapshot.getDocuments()) {
+                String recipeText = document.getString("recipeText");
+
+                if (!TextUtils.isEmpty(recipeText) && !isRecipeAlreadyAdded(recipeText)) {
+                    Recipe recipe = new Recipe(recipeText);
+                    recipeList.add(recipe);
+
+                    // Optional: Add post recipeText to Recipes collection for consistency
+                    addRecipeToRecipesCollection(recipeText);
+                }
+            }
+
+            recipeAdapter.notifyDataSetChanged();
+        });
+    }
+
+    private boolean isRecipeAlreadyAdded(String recipeText) {
+        for (Recipe recipe : recipeList) {
+            if (recipe.getIngredients().equals(recipeText)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addRecipeToRecipesCollection(String recipeText) {
+        Map<String, String> recipeData = new HashMap<>();
+        recipeData.put("ingredients", recipeText);
+
+        recipesCollection.add(recipeData).addOnFailureListener(e -> {
+            // Log error or handle failure
         });
     }
 
@@ -89,6 +132,14 @@ public class MyRecipesPageFragment extends Fragment {
             Recipe recipe = new Recipe(ingredients);
             recipeList.add(recipe);
             recipeAdapter.notifyDataSetChanged();
+        });
+
+        // Add to Posts collection
+        Map<String, String> postData = new HashMap<>();
+        postData.put("recipeText", ingredients);
+
+        postsCollection.add(postData).addOnSuccessListener(documentReference -> {
+            // Optional: Handle post success
         });
     }
 }
