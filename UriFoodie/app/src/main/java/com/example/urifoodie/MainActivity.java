@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.nav_explorer) {
                 selectedFragment = new ExplorerPageFragment();
             } else if (item.getItemId() == R.id.nav_my_recipes) {
-                selectedFragment = new MyRecipiesPageFragment();
+                selectedFragment = new MyRecipesPageFragment();
             } else if (item.getItemId() == R.id.nav_profile) {
                 selectedFragment = new ProfilePageFragment();
             }
@@ -76,6 +76,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        // Check if there is a navigation intent
+        String navigateTo = getIntent().getStringExtra("navigateTo");
+        if ("MyRecipesPageFragment".equals(navigateTo)) {
+            String recipeText = getIntent().getStringExtra("recipeText");
+
+            // Pass data to the fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("recipeText", recipeText);
+
+            MyRecipesPageFragment fragment = new MyRecipesPageFragment();
+            fragment.setArguments(bundle);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .commit();
+        }
 
     }
 }

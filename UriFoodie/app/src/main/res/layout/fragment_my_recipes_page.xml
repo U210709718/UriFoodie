@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightBlue">
+
+    <!-- Toolbar for "My Recipes" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/lightGray">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="MY RECIPES"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Search Icon -->
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="Search"
+            android:src="@drawable/ic_pan"
+            app:tint="@color/black" />
+    </LinearLayout>
+
+    <!-- Input area for adding new recipes -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/editRecipeInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/lightGray"
+            android:gravity="start|top"
+            android:hint="New Recipe..."
+            android:textColorHint="@color/black"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/addRecipeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Add Recipe"
+            android:padding="8dp"
+            android:src="@drawable/ic_submit"
+            app:tint="@color/black" />
+
+        <ImageView
+            android:id="@+id/cancelRecipeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Cancel"
+            android:padding="8dp"
+            android:src="@drawable/ic_cancel"
+            app:tint="@color/black" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+</LinearLayout>
