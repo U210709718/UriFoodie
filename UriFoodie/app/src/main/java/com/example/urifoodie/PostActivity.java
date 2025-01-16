@@ -205,7 +205,16 @@ public class PostActivity extends AppCompatActivity {
         }
 
         // Upload the image to Imgur and then save the post to Firebase
-        uploadImageToImgur(currentImageFile, imageUrl -> savePostToFirebase(postText, recipeText, imageUrl));
+        uploadImageToImgur(currentImageFile, imageUrl -> {
+            savePostToFirebase(postText, recipeText, imageUrl);
+
+            // Navigate to myRecipesPageFragment with the recipe text
+            Intent intent = new Intent(PostActivity.this, MainActivity.class);
+            intent.putExtra("navigateTo", "myRecipesPageFragment");
+            intent.putExtra("recipeText", recipeText);
+            startActivity(intent);
+
+        });
     }
 
     private void savePostToFirebase(String postText, String recipeText, String imageUrl) {
